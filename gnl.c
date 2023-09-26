@@ -6,20 +6,16 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 21:06:47 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/09/25 22:41:37 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/09/26 21:31:56 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <fcntl.h>
-# define BUFFER_SIZE 1
+#include "gnl.h"
 
-//void	leaks()
-//{
-//	system("leaks a.out");
-//}
+void	leaks()
+{
+	system("leaks a.out");
+}
 
 char	*get_next_line(int fd)
 {
@@ -28,7 +24,7 @@ char	*get_next_line(int fd)
 	int		count;
 	char	*buffer;
 
-	//atexit(leaks);
+	atexit(leaks);
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	line = (char *)malloc(sizeof(char) * (1000));
@@ -36,8 +32,8 @@ char	*get_next_line(int fd)
 	line[i] = '\0';
 	while (1)
 	{
-		buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE));
-		count = read(fd, buffer, BUFFER_SIZE);
+		buffer = (char *)malloc(sizeof(char) * 1);
+		count = read(fd, buffer, 1);
 		if (count == 0)
 		{
 			free(buffer);

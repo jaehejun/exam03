@@ -6,7 +6,7 @@
 /*   By: jaehejun <jaehejun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 16:36:16 by jaehejun          #+#    #+#             */
-/*   Updated: 2023/09/25 22:47:23 by jaehejun         ###   ########.fr       */
+/*   Updated: 2023/09/26 22:56:11 by jaehejun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,18 @@ int	ft_putstr(char *format);
 int	ft_putnbr(int number);
 int	ft_puthex(unsigned int number);
 int	ft_printf(const char *format, ...);
+int	num_len(long long number, int base);
 
-void	leaks()
-{
-	system("leaks a.out");
-}
 
 int	main(void)
 {
 	int		ft_count;
 	int		count;
 
-	atexit(leaks);
-	ft_count = ft_printf("Hello, %s%c, %d and %x ,%c%d\n", "world", '!', 2147483647, 2147483647, '-', -2147483648);
-	count = printf("Hello, %s%c, %d and %x, %c%d\n", "world", '!', 2147483647, 2147483647, '-', -2147483648);
+	//ft_count = ft_printf("%%%% Hello, %s%c, %d and %x, %c%d\n", "world", '!', 2147483647, 2147483647, '-', -2147483648);
+	//count = printf("%%%% Hello, %s%c, %d and %x, %c%d\n", "world", '!', 2147483647, 2147483647, '-', -2147483647);
+	ft_count = ft_printf("");
+	count = printf("");
 	ft_printf("%d\n", ft_count);
 	printf("%d\n", count);
 }
@@ -102,31 +100,48 @@ int	ft_putstr(char *format)
 int	ft_putnbr(int number)
 {
 	long long	num;
-	static int	count;
+	int			count;
 
+	count = num_len(number, 10);
 	num = (long long)number;
 	if (num < 0)
 	{
 		num *= -1;
 		ft_putchar('-');
-		count++;
 	}
 	if (num >= 10)
 		ft_putnbr(num / 10);
 	ft_putchar(num % 10 + '0');
-	count++;
 	return (count);
 }
 
 int	ft_puthex(unsigned int number)
 {
-	static int		count;
-	char			*base_low;
+	int		count;
+	char	*base_low;
 
+	count = num_len(number, 16);
 	base_low = "0123456789abcdef";
 	if (number >= 16)
 		ft_puthex(number / 16);
 	ft_putchar(base_low[number % 16]);
-	count++;
 	return (count);
+}
+
+int	num_len(long long number, int base)
+{
+	int	len;
+
+	len = 0;
+	if (number < 0)
+	{
+		number *= -1;
+		len++;
+	}
+	while (number >= base)
+	{
+		number = number/base;
+		len++;
+	}
+	return (len + 1);
 }
